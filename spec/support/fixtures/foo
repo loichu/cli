@@ -568,5 +568,32 @@ Foo::CLI::Commands.after("callbacks",  Callbacks::AfterClass)
 Foo::CLI::Commands.before("callbacks", Callbacks::Before.new)
 Foo::CLI::Commands.after("callbacks",  Callbacks::After.new)
 
+module Foo
+  module CLI
+    module Commands
+      class System < Hanami::CLI::Command
+        desc "Print system summary"
+        argument :nologo, desc: "Do not display distro logo ascii art", type: :boolean, required: false
+
+        def call(nologo, **)
+          logo = ' ditroasciilogo' unless nologo
+          puts 'system summary' + logo
+        end
+
+        class Json < Hanami::CLI::Command
+          desc "Print system data as json"
+          argument :key, desc: "JSON root key to print", type: :string, required: false
+
+          def call(key = :root, **)
+            puts 'system json at ' + key
+          end
+        end
+      end
+    end
+  end
+end
+Foo::CLI::Commands.register "system",      Foo::CLI::Commands::System
+Foo::CLI::Commands.register "system json", Foo::CLI::Commands::System::Json
+
 cli = Hanami::CLI.new(Foo::CLI::Commands)
 cli.call

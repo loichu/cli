@@ -124,4 +124,32 @@ RSpec.describe "Subcommands" do
       end
     end
   end
+
+  context "Subcommands are optional" do
+    it "executes master command" do
+      output = `foo system`
+
+      expect(output).to eq("system summary distrologo")
+    end
+
+    it "executes sub-command" do
+      output = `foo system json`
+
+      expect(output).to eq("system json at root")
+    end
+
+    context "and also accept args" do
+      it "executes master command" do
+        output = `foo system --nologo`
+
+        expect(output).to eq("system summary")
+      end
+
+      it "executes sub-command" do
+        output = `foo system json kernel`
+
+        expect(output).to eq("system json at kernel")
+      end
+    end
+  end
 end
